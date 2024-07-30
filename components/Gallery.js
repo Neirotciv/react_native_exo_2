@@ -4,7 +4,6 @@ import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-root-toast';
 
 const Gallery = () => {
-  // const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,7 +21,6 @@ const Gallery = () => {
     console.log(result);
 
     if (!result.canceled) {
-      // setImage(result.assets[0].uri);
       if (checkIfImagePresent(result.assets[0].assetId)) {
         setShowToast(true);
         return;
@@ -74,7 +72,6 @@ const Gallery = () => {
       <View style={styles.container}>
         <Toast visible={showToast} position={1} onHide={handleToast}>Image déjà ajouté !</Toast>
 
-        {/* <Image source={{ uri: image }} style={styles.image} /> */}
         <ScrollView style={styles.gallery} horizontal={true}>
           {images.map((image, index) => {
             return (
@@ -105,16 +102,20 @@ const Gallery = () => {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TextInput value={tag} onChangeText={text => setTag(text)} placeholder='#' />
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable style={styles.button} onPress={addTagToImage}>
-              <Text style={styles.text}>Ajouter un tag</Text>
-            </Pressable>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Annuler</Text>
-            </Pressable>
+            <View style={styles.horizontalWrapper}>
+              <Text style={styles.modalText}>Ajouter un tag à l'image</Text>
+              <TextInput style={styles.textInput} value={tag} onChangeText={text => setTag(text)} placeholder='#' />
+            </View>
+            <View style={styles.horizontalWrapper}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.text}>Annuler</Text>
+              </Pressable>
+              <Pressable style={styles.button} onPress={addTagToImage}>
+                <Text style={styles.text}>Ajouter</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Modal>
@@ -162,10 +163,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
   },
   modalView: {
-    margin: 20,
+    width: '90%',
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
@@ -181,6 +181,19 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#2196F3',
+  },
+  horizontalWrapper: {
+    width: '100%',
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textInput: {
+    height: 40,
+    width: 100,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
 });
 
