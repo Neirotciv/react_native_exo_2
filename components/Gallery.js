@@ -1,0 +1,119 @@
+import React, { useState } from 'react';
+import { View, Pressable, Image, StyleSheet, ScrollView, Text, TouchableOpacity, ToastAndroid } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import Toast from 'react-native-root-toast';
+
+const Gallery = () => {
+  // const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      // setImage(result.assets[0].uri);
+      if (checkIfImagePresent(result.assets[0].assetId)) {
+        setShowToast(true);
+        return;
+      }
+
+      const image = {
+        id: result.assets[0].assetId,
+        uri: result.assets[0].uri,
+        tags: ['#salut', '#coucou'],
+      }
+      setImages([...images, image]);
+    }
+  }
+
+  const checkIfImagePresent = (id) => {
+    return images.some(image => image.id === id);
+  }
+
+  const handleImageTag = (index) => {
+    console.log('Image Tag', index);
+  }
+
+  const handleToast = () => {
+    setShowToast(false);
+  }
+
+  return (
+    <>
+      <View style={styles.container}>
+        <Toast visible={showToast} position={1} onHide={handleToast}>Image déjà ajouté !</Toast>
+
+        {/* <Image source={{ uri: image }} style={styles.image} /> */}
+        <ScrollView style={styles.gallery} horizontal={true}>
+          {images.map((image, index) => {
+            return (
+              <TouchableOpacity
+                style={styles.imageWrapper}
+                key={index}
+                onPress={() => handleImageTag(image.id)}
+              >
+                <Image source={{ uri: image.uri }} style={styles.image} />
+                <Text style={styles.tags}>{image.tags.join(', ')}</Text>
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>
+      </View>
+      <View>
+        <Pressable style={styles.button} onPress={pickImage}>
+          <Text style={styles.text}>Ajouter une image</Text>
+        </Pressable>
+      </View>
+    </>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 20,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    width: '100%',
+    height: 300,
+  },
+  tags: {
+    textAlign: 'center',
+  },
+  image: {
+    height: 250,
+    margin: 5,
+    aspectRatio: 3 / 2,
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    backgroundColor: 'black',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
+  gallery: {
+  }
+});
+
+export default Gallery;
