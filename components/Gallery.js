@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Pressable, Image, StyleSheet, ScrollView, Text, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Pressable, Image, StyleSheet, ScrollView, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-root-toast';
 
@@ -7,6 +7,9 @@ const Gallery = () => {
   // const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
   const [showToast, setShowToast] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [tag, setTag] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -28,7 +31,7 @@ const Gallery = () => {
       const image = {
         id: result.assets[0].assetId,
         uri: result.assets[0].uri,
-        tags: ['#salut', '#coucou'],
+        tags: [],
       }
       setImages([...images, image]);
     }
@@ -38,12 +41,32 @@ const Gallery = () => {
     return images.some(image => image.id === id);
   }
 
-  const handleImageTag = (index) => {
-    console.log('Image Tag', index);
+  const handleImageTag = (id) => {
+    console.log('Image Tag', id);
+    console.log(tag)
+    setSelectedImage(id);
+    setModalVisible(true);
   }
 
   const handleToast = () => {
     setShowToast(false);
+  }
+
+  const addTagToImage = () => {
+    const formatTag = tag.startsWith('#') ? tag : `#${tag}`;
+    const updatedImages = images.map(image => {
+      if (image.id === selectedImage) {
+        return {
+          ...image,
+          tags: [...image.tags, formatTag]
+        }
+      }
+      return image;
+    });
+
+    setImages(updatedImages);
+    setTag('');
+    setModalVisible(false);
   }
 
   return (
@@ -72,6 +95,29 @@ const Gallery = () => {
           <Text style={styles.text}>Ajouter une image</Text>
         </Pressable>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TextInput value={tag} onChangeText={text => setTag(text)} placeholder='#' />
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable style={styles.button} onPress={addTagToImage}>
+              <Text style={styles.text}>Ajouter un tag</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Annuler</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -112,8 +158,30 @@ const styles = StyleSheet.create({
     letterSpacing: 0.25,
     color: 'white',
   },
-  gallery: {
-  }
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
 });
 
 export default Gallery;
