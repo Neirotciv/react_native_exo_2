@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
-    marginTop: 40,
+    padding: 10,
     alignItems: 'center',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
@@ -84,7 +83,6 @@ const styles = StyleSheet.create({
   weatherContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10
   },
   icon: {
     width: 24,

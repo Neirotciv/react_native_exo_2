@@ -125,7 +125,6 @@ const Gallery = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
     padding: 10,
     borderRadius: 10,
     backgroundColor: 'white',

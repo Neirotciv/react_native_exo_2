@@ -1,28 +1,57 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import {RootSiblingParent} from 'react-native-root-siblings';
+import { NavigationContainer } from '@react-navigation/native';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Weather from './components/Weather';
 import Gallery from './components/Gallery';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
 
+const HomePage = () => {
   return (
-    <RootSiblingParent>
-      <View style={styles.container}>
-        <Weather />
-        <Gallery />
+    <View style={styles.container}>
+      <Weather />
+      <Gallery />
+    </View>
+  );
+}
+
+const PageOne = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.Text}>Page One</Text>
+    </View>
+  );
+}
+
+const PageTwo = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.Text}>Page One</Text>
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <RootSiblingParent>
+        <Tab.Navigator initialRouteName='Home'>
+          <Tab.Screen name="Home" component={HomePage} />
+          <Tab.Screen name="Page 1" component={PageOne} />
+          <Tab.Screen name="Page 2" component={PageTwo} />
+        </Tab.Navigator>
         <StatusBar style="auto" />
-      </View>
-    </RootSiblingParent>
+      </RootSiblingParent>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center'
   },
   Text: {
