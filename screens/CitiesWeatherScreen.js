@@ -59,6 +59,12 @@ export default function CityWeatherScreen() {
   }
 
   const handleAddCity = () => {
+    const isCityExist = cities.some(c => c.name === cityInput);
+    if (isCityExist) {
+      setCityInput('');
+      return;
+    }
+
     setCity(cityInput);
     setCityInput('');
   };
@@ -109,8 +115,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'column',
   },
   button: {
     height: 45,

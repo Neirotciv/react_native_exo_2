@@ -7,6 +7,8 @@ import CitiesWeatherScreen from './screens/CitiesWeatherScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import Weather from './components/Weather';
 import Gallery from './components/Gallery';
+import { store } from './store';
+import { Provider } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,16 +23,18 @@ const HomePage = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootSiblingParent>
-        <Tab.Navigator initialRouteName='Home'>
-          <Tab.Screen name="Home" component={HomePage} />
-          <Tab.Screen name="Météo par villes" component={CitiesWeatherScreen} />
-          <Tab.Screen name="Favoris" component={FavoritesScreen} />
-        </Tab.Navigator>
-        <StatusBar style="auto" />
-      </RootSiblingParent>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <RootSiblingParent>
+          <Tab.Navigator initialRouteName='Home'>
+            <Tab.Screen name="Home" component={HomePage} />
+            <Tab.Screen name="Météo par villes" component={CitiesWeatherScreen} />
+            <Tab.Screen name="Favoris" component={FavoritesScreen} />
+          </Tab.Navigator>
+          <StatusBar style="auto" />
+        </RootSiblingParent>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

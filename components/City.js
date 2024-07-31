@@ -1,4 +1,8 @@
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Pressable } from 'react-native';
+
+const addToFavourites = (city) => {
+  console.log('favorite', city);
+}
 
 export default function City({ city }) {
   return (
@@ -9,10 +13,17 @@ export default function City({ city }) {
       <Image source={{ uri: `https://openweathermap.org/img/wn/${city.weather.weather[0].icon}@2x.png` }}
         style={{ width: 50, height: 50 }} />
       <Text style={styles.weather}>{city.weather.description}</Text>
+      <Pressable
+        onPress={() => addToFavourites(city.name)}
+        title="Ajouter"
+        color="#841584"
+        style={styles.button}
+      >
+        <Text style={styles.text}>Favoris</Text>
+      </Pressable>
     </View >
   );
 }
-
 
 const styles = StyleSheet.create({
   card: {
@@ -20,6 +31,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%',
+    padding: 10,
+    margin: 5,
   },
   temperature: {
     fontSize: 20,
